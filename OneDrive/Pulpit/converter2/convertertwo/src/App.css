@@ -1,0 +1,84 @@
+@import url("https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&display=swap");
+/* font-family: 'Annie Use Your Telescope', cursive; */
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  font-family: "Annie Use Your Telescope", cursive;
+  height: 100vh;
+  width: 100vw;
+}
+
+.headerContainer {
+  text-align: center;
+}
+
+h1 {
+  font-size: 40px;
+  padding-top: 20px;
+}
+
+.input {
+  /* background-color: orange; */
+  margin: 20px;
+  height: 25px;
+  font-size: 16px;
+  border-radius: 20px;
+  width: 200px;
+  text-align: center;
+}
+
+.sliderWrapper {
+  position: relative;
+  margin: 1rem;
+}
+
+input {
+  -webkit-appearance: none;
+}
+
+.slider {
+  width: 300px;
+  height: 10px;
+  border-radius: 5px;
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 128, 0, 0.7),
+    rgba(255, 0, 0, 0.7)
+  );
+  outline: none;
+}
+
+.translatedContainer {
+  width: 100%;
+  height: 40px;
+}
+
+.translated {
+  display: flex;
+  flex-flow: row wrap;
+  font-size: 30px;
+  justify-content: center;
+}
+
+input {
+  border: 2px solid #ddd;
+  display: inline-flex;
+}
+
+input,
+input * {
+  box-sizing: border-box;
+}
+
+input input[type="number"] {
+  border: solid #ddd;
+  border-width: 0 2px;
+  font-size: 2rem;
+  height: 3rem;
+  font-weight: bold;
+  text-align: center;
+}
