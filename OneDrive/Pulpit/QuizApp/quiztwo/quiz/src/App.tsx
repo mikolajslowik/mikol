@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Question from "./Question";
 import "./App.css";
+import Final from "./final";
+import { questions } from "./Questions";
 
 function App() {
+  const correctAnswers = questions.map((el) => el.answer);
   const [questionId, setQuestionId] = useState<number>(1);
   const [answerSummary, setAnswerSummary] = useState<Array<string>>([]);
-  console.log(answerSummary);
+
   return (
     <div className="App">
-      <div>
-        <div> Witoj! </div>
+      <div className="wrapper">
+        <div className="hello"> Witoj! </div>
         <Question
           questionId={questionId}
           setQuestionId={setQuestionId}
@@ -17,6 +20,13 @@ function App() {
           setAnswerSummary={setAnswerSummary}
         />
       </div>
+      {questionId > 10 ? (
+        <Final
+          setQuestionId={setQuestionId}
+          correctAnserws={correctAnswers}
+          answersSummary={answerSummary}
+        />
+      ) : null}
     </div>
   );
 }

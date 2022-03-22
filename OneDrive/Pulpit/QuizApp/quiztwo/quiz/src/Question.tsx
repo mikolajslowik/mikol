@@ -1,5 +1,5 @@
-import { questions } from "./Questions";
-import { Dispatch, SetStateAction, useState } from "react";
+import { questions, OptionsSummary } from "./Questions";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 interface QuestionProps {
   answersSummary: string[];
@@ -12,82 +12,87 @@ type InputEvent = { target: { value: string } };
 
 function Question(props: QuestionProps) {
   const [answer, setAnswer] = useState<string>("");
-  const answersSummary: string[] = [];
+  const [isChecked, setIsChecked] = useState<string>("");
+  const [isClicked, setIsClicked] = useState<boolean>(false);
+  const [isCorrect, setIsCorrect] = useState<boolean>();
 
-  const answerOptions = questions.find((obj) => {
-    return obj.id === props.questionId;
-  });
+  useEffect(() => {
+    setIsChecked("");
+  }, [props.questionId]);
+
+  const questionObject =
+    questions.find((obj) => {
+      return obj.id === props.questionId;
+    }) || questions[0];
 
   const chooseOption = (e: InputEvent) => {
-    setAnswer(e.target.value);
+    if (e.target.value === "a" || "b" || "c" || "d") {
+      setAnswer(e.target.value);
+      setIsChecked(e.target.value);
+    } else {
+      alert("zaznacz coś mordo");
+    }
   };
 
   const submitHandler = (e: any) => {
     e.preventDefault();
-    props.setAnswerSummary((answersSummary) => [...answersSummary, answer]);
+    if (e.target.value === "a" || "b" || "c" || "d") {
+      if (answer) {
+        props.setAnswerSummary((answersSummary) => [...answersSummary, answer]);
+      }
+      setIsClicked(true);
+      setAnswer("");
+    }
+
+    if (answer === "") {
+      alert("Zaznacz odpowiedź!");
+      setIsClicked(false);
+    }
+    setIsCorrect(isChecked === questionObject?.answer);
   };
+
+  const text = isCorrect ? "gratulacje, masz rację!" : "To nie ta odp";
 
   const nextQuestionHandler = () => {
     props.setQuestionId(props.questionId + 1);
+    setIsClicked(false);
   };
 
   return (
     <>
       <form>
-        <div className="question">{answerOptions?.question}</div>
-        <div>
-          <input
-            onChange={chooseOption}
-            type="radio"
-            id="a"
-            name="d"
-            value="a"
-          />
-          <label htmlFor="a">{answerOptions?.a}</label>
-        </div>
-
-        <div>
-          <input
-            onChange={chooseOption}
-            type="radio"
-            id="b"
-            name="d"
-            value="b"
-          />{" "}
-          <label htmlFor="b">{answerOptions?.b}</label>
-        </div>
-
-        <div>
-          <input
-            onChange={chooseOption}
-            type="radio"
-            id="c"
-            name="d"
-            value="c"
-          />
-          <label htmlFor="c">{answerOptions?.c}</label>
-        </div>
-        <div>
-          <input
-            onChange={chooseOption}
-            type="radio"
-            id="d"
-            name="d"
-            value="d"
-          />
-          <label htmlFor="d">{answerOptions?.d}</label>
-        </div>
-        <button onClick={submitHandler}>Potwierdzam odpowiedź!</button>
+        <div className="question">{questionObject?.question}</div>
+        {Object.keys(questionObject.options).map((letter: string) => {
+          return (
+            <div key={letter}>
+              <input
+                onChange={chooseOption}
+                type="radio"
+                id={letter}
+                name={letter}
+                value={letter}
+                checked={isChecked === letter}
+                disabled={isClicked}
+              />
+              <label className="label" htmlFor={letter}>
+                {questionObject?.options[letter as keyof OptionsSummary]}
+              </label>
+            </div>
+          );
+        })}
+        <button type="submit" onClick={submitHandler} disabled={isClicked}>
+          Potwierdzam odpowiedź!
+        </button>
       </form>
-      <div className="answer">
-        {answer === answerOptions?.answer
-          ? "gratulacje, masz"
-          : "To nie ta odp"}
-      </div>
-
-      <button onClick={nextQuestionHandler} className="next">
+      <div className="answer">{isClicked ? text : ""}</div>
+      <button
+        onClick={nextQuestionHandler}
+        className="next"
+        disabled={!isClicked}
+      >
         następne pytanie
       </button>
+      <div className="grandeFinale"></div>
     </>
   );
 }
